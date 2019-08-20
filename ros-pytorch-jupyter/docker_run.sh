@@ -7,10 +7,10 @@ COLOR_NC='\033[0m'
 
 # Specify cuda version
 if [ $# -gt 0 ]; then
-    if [ "$1" == "cuda8" ]; then
-        docker_tag="cuda8.0"
-    elif [ "$1" == "cuda8.0" ]; then
-        docker_tag="cuda8.0"
+    if [ "$1" == "cuda9" ]; then
+        docker_tag="cuda9.0"
+    elif [ "$1" == "cuda9.0" ]; then
+        docker_tag="cuda9.0"
     elif [ "$1" == "cuda10" ]; then
         docker_tag="cuda10.0"
     elif [ "$1" == "cuda10.0" ]; then
@@ -18,10 +18,10 @@ if [ $# -gt 0 ]; then
     
     else
         echo -e "Please specify which cuda version your GPU support."
-        echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda8 | cuda10]${COLOR_NC}"
+        echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda9 | cuda10]${COLOR_NC}"
     fi
 else
-    echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda8 | cuda10]${COLOR_NC}"
+    echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda9 | cuda10]${COLOR_NC}"
 fi
 
 # Find current directory and transfer it to container directory for Docker
@@ -45,7 +45,7 @@ then
                         -p "${jupyter_port}":"${jupyter_port}" \
                         -w "${goal_dir}" \
                         -e JUPYTER_PORT="${jupyter_port}" \
-                        --name trailnet-pytorch-test \
+                        --name ros-pytorch \
                         coolcat647/ros-pytorch:${docker_tag}
 else
     printf "Run \"nvidia-docker\"\n"
@@ -53,6 +53,6 @@ else
                                -p "${jupyter_port}":"${jupyter_port}" \
                                -w ${goal_dir} \
                                -e JUPYTER_PORT="${jupyter_port}" \
-                               --name trailnet-pytorch-test \
+                               --name ros-pytorch \
                                coolcat647/ros-pytorch:${docker_tag}
 fi
