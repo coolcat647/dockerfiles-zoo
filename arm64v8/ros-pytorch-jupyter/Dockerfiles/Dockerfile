@@ -4,7 +4,7 @@ FROM nvcr.io/nvidia/l4t-base:r32.2
 SHELL ["/bin/bash","-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
-
+RUN apt-get update && apt-get install -y --no-install-recommends make g++
 # Prerequisite linux tool for ROS 
 RUN apt-get update && \
     apt-get install -y wget lsb-release iputils-ping \
