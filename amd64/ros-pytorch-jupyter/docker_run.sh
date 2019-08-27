@@ -41,7 +41,7 @@ if [ -z "$ret_code" ]
 then
     printf "${COLOR_YELLOW}\"nvidia-docker\" is not found, so substitute docker. ${COLOR_NC}\n"
 
-    docker run --gpus all -it --rm -v ${current_dir}:${goal_dir} \
+    docker run -it --rm -v ${current_dir}:${goal_dir} \
                         -p "${jupyter_port}":"${jupyter_port}" \
                         -w "${goal_dir}" \
                         -e JUPYTER_PORT="${jupyter_port}" \
