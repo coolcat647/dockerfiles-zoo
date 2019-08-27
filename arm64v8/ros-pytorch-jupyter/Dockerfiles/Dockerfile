@@ -4,8 +4,10 @@ FROM nvcr.io/nvidia/l4t-base:r32.2
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Prerequisite linux tool for ROS 
-RUN apt-get update -qq > /dev/null && apt-get install -y -qq sudo wget lsb-release iputils-ping > /dev/null && \
-    apt-get install -y -qq build-essential vim htop sshfs nfs-common git && \
+RUN apt-get update && \
+    apt-get install -y wget lsb-release iputils-ping \
+                       build-essential vim htop sshfs \
+                       nfs-common git && \
     rm -rf /var/lib/apt/lists/*
 
 
