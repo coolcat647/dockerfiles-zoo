@@ -20,7 +20,7 @@ else
 fi
 
 # Find current directory and transfer it to container directory for Docker
-jupyter_port="8889"
+jupyter_port="8888"
 current_dir="$(pwd)"
 host_dir="${HOME}/"
 container_dir="/root/"
@@ -38,7 +38,6 @@ then
 
     docker run -it --rm --net=host \
                         -v ${current_dir}:${goal_dir} \
-                        -p "${jupyter_port}":"${jupyter_port}" \
                         -w "${goal_dir}" \
                         -e JUPYTER_PORT="${jupyter_port}" \
                         --name ros-pytorch \
@@ -47,7 +46,6 @@ else
     printf "Run \"nvidia-docker\"\n"
     nvidia-docker run -it --rm --net=host \
                                -v ${current_dir}:${goal_dir} \
-                               -p "${jupyter_port}":"${jupyter_port}" \
                                -w ${goal_dir} \
                                -e JUPYTER_PORT="${jupyter_port}" \
                                --name ros-pytorch \
