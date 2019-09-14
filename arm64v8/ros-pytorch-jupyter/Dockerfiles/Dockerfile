@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends make g++
 RUN apt-get update && \
     apt-get install -y wget lsb-release iputils-ping \
                        build-essential vim htop sshfs \
-                       nfs-common git && \
+                       nfs-common git net-tools && \
     rm -rf /var/lib/apt/lists/*
 
 

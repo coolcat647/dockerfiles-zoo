@@ -7,15 +7,10 @@ COLOR_NC='\033[0m'
 
 # Specify cuda version
 if [ $# -gt 0 ]; then
-    if [ "$1" == "cuda9" ]; then
+   if [[ "$1" == "cuda9" || "$1" == "cuda9.0" ]] ; then
         docker_tag="cuda9.0"
-    elif [ "$1" == "cuda9.0" ]; then
-        docker_tag="cuda9.0"
-    elif [ "$1" == "cuda10" ]; then
-        docker_tag="cuda10.0"
-    elif [ "$1" == "cuda10.0" ]; then
-        docker_tag="cuda10.0"
-    
+    elif [[ "$1" == "cuda10" || "$1" == "cuda10.0" ]] ; then
+        docker_tag="cuda10.0"    
     else
         echo -e "Please specify which cuda version your GPU support."
         echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda9 | cuda10]${COLOR_NC}"
@@ -41,7 +36,8 @@ if [ -z "$ret_code" ]
 then
     printf "${COLOR_YELLOW}\"nvidia-docker\" is not found, so substitute docker. ${COLOR_NC}\n"
 
-    docker run -it --rm -v ${current_dir}:${goal_dir} \
+    docker run -it --rm --net=host \
+                        -v ${current_dir}:${goal_dir} \
                         -p "${jupyter_port}":"${jupyter_port}" \
                         -w "${goal_dir}" \
                         -e JUPYTER_PORT="${jupyter_port}" \
@@ -49,7 +45,8 @@ then
                         coolcat647/ros-pytorch:${docker_tag}
 else
     printf "Run \"nvidia-docker\"\n"
-    nvidia-docker run -it --rm -v ${current_dir}:${goal_dir} \
+    nvidia-docker run -it --rm --net=host \
+                               -v ${current_dir}:${goal_dir} \
                                -p "${jupyter_port}":"${jupyter_port}" \
                                -w ${goal_dir} \
                                -e JUPYTER_PORT="${jupyter_port}" \

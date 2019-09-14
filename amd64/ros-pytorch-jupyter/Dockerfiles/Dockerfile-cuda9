@@ -1,12 +1,12 @@
-# FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
-FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+# FROM nvidia/cudagl:10.0-devel-ubuntu16.04
+FROM nvidia/cudagl:9.0-devel-ubuntu16.04
 # FROM osrf/ros:kinetic-desktop-xenial
 
 SHELL ["/bin/bash","-c"]
 
 # Prerequisite linux tool for ROS 
 RUN apt-get update -qq > /dev/null && apt-get install -y -qq sudo wget lsb-release iputils-ping > /dev/null && \
-    apt-get install -y -qq build-essential vim htop sshfs nfs-common git && \
+    apt-get install -y -qq build-essential vim htop sshfs nfs-common git net-tools && \
     rm -rf /var/lib/apt/lists/*
 
 # ROS installation: kinetic
