@@ -63,12 +63,15 @@ RUN git clone https://github.com/RobotWebTools/tf2_web_republisher /root/catkin_
 WORKDIR $CATKIN_WS/src
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
     && cd $CATKIN_WS \
-    && catkin_make
-#RUN /bin/bash -c '. /opt/ros/kinetic/setup.bash; cd /root/catkin_ws; catkin_make'
+    && catkin_make \
+    && apt-get install ros-${ROS_DISTRO}-serial
+# RUN /bin/bash -c '. /opt/ros/kinetic/setup.bash; cd /root/catkin_ws; catkin_make'
 
-RUN git clone https://github.com/ARG-NCTU/jupyter-ros.git /root/jupyter-ros/
+# RUN git clone https://github.com/ARG-NCTU/jupyter-ros.git /root/jupyter-ros/
 
 EXPOSE 8888
+
+ENV QT_X11_NO_MITSHM=1
 
 # COPY ./ros_catkin_entrypoint.sh /
 # ENTRYPOINT ["/ros_catkin_entrypoint.sh"]
