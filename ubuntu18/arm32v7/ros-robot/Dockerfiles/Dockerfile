@@ -17,7 +17,11 @@ RUN apt-get update && apt-get install -y sudo python-pip \
     ros-${ROS_DISTRO}-tf-conversions \
     ros-${ROS_DISTRO}-pcl-ros \
     ros-${ROS_DISTRO}-teb-local-planner-tutorials \
-    ros-${ROS_DISTRO}-stage-ros
+    ros-${ROS_DISTRO}-stage-ros \
+    ros-${ROS_DISTRO}-teleop-twist-joy
+
+RUN pip install simple_pid \
+    Adafruit_GPIO
 
 
 
