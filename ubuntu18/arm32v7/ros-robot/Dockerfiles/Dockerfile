@@ -1,4 +1,4 @@
-FROM arm32v7/ros:melodic-robot
+FROM arm32v7/ros:melodic-perception
 # FROM arm64v8/ubuntu:bionic
 
 SHELL ["/bin/bash","-c"]
@@ -11,7 +11,27 @@ SHELL ["/bin/bash","-c"]
 #                        build-essential vim htop sshfs \
 #                        nfs-common git net-tools && \
 #     rm -rf /var/lib/apt/lists/*
+ENV ROS_DISTRO melodic
+RUN apt-get update && apt-get install -y sudo python-pip \
+    ros-${ROS_DISTRO}-tf \
+    ros-${ROS_DISTRO}-tf-conversions \
+    ros-${ROS_DISTRO}-pcl-ros \
+    ros-${ROS_DISTRO}-teb-local-planner-tutorials \
+    ros-${ROS_DISTRO}-stage-ros
 
+
+
+# Create a new user
+ENV USER developer
+RUN useradd -m -d /home/${USER} ${USER} -p "" \
+ && chown -R ${USER} /home/${USER} /root/ && adduser ${USER} sudo
+USER ${USER}
+
+RUN sudo rm /etc/ros/rosdep/sources.list.d/20-default.list && \
+    sudo rosdep init && rosdep update && \
+    echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/${USER}/.bashrc && \
+    source /home/${USER}/.bashrc
+    
 
 # ROS installation: melodic
 # ENV ROS_DISTRO melodic
