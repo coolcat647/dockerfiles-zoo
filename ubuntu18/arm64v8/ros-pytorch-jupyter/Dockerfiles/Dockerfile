@@ -1,7 +1,7 @@
 FROM nvcr.io/nvidia/l4t-base:r32.3.1
 # FROM arm64v8/ubuntu:bionic
 
-SHELL ["/bin/bash","-c"]
+# SHELL ["/bin/bash","-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && RUN apt-get upgrade -y
