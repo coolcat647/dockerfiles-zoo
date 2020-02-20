@@ -1,6 +1,4 @@
-# FROM nvidia/cudagl:10.0-devel-ubuntu18.04
 FROM nvidia/cudagl:10.0-devel-ubuntu18.04
-# FROM osrf/ros:kinetic-desktop-xenial
 
 SHELL ["/bin/bash","-c"]
 
@@ -12,6 +10,8 @@ RUN apt-get update -qq > /dev/null && apt-get install -y -qq sudo wget lsb-relea
 
 ENV CUDNN_VERSION 7.4.1.5
 LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
+
+# CUDA 10 : Tensorflow 1.15.0 
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils \
             libcudnn7=$CUDNN_VERSION-1+cuda10.0
 
@@ -51,15 +51,10 @@ RUN apt-get -y install nodejs
 
 RUN pip3 install jupyter ipywidgets jupyterlab bqplot pyyaml jupyros numpy==1.18.0
 
-# Pytorch installation: cuda 9.0 + python 2.7 + pip
-# RUN pip install --no-cache-dir torch==1.0.1 -f https://download.pytorch.org/whl/cu90/stable torchvision typing
-# Pytorch installation: cuda 10.0 + python 2.7 + pip
-# RUN pip install --no-cache-dir torch torchvision
-
-# Tensorflow installation: cuda 10.0 + python 3.6 + pip3
+# Tensorflow 1.15.0 installation: cuda 10.0 + python 3.6 + pip3
 RUN pip3 install --no-cache-dir tensorflow==1.15.0 tensorflow-gpu==1.15.0
 
-RUN pip3 install gym
+RUN pip3 install gym setuptools==41.0.0
 
 ENV QT_X11_NO_MITSHM=1
 
