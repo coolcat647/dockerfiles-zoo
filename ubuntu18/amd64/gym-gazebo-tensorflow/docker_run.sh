@@ -53,9 +53,9 @@ export JUPYTER_PORT="${jupyter_port}"
 #
 if [ $# -gt 0 ]; then
     if [ "$1" == "same" ]; then
-        docker exec -it ros-tensorflow bash
+        docker exec -it gym-gazebo-tensorflow bash
     else
-        ${DOCKER_CMD} run --name ros-tensorflow --rm -it --net=host --privileged -v /dev:/dev \
+        ${DOCKER_CMD} run --name gym-gazebo-tensorflow --rm -it --net=host --privileged -v /dev:/dev \
             -e JUPYTER_PORT="${jupyter_port}" \
             -e DISPLAY=$DISPLAY \
             -v /etc/localtime:/etc/localtime:ro -v /var/run/docker.sock:/var/run/docker.sock \
@@ -74,7 +74,7 @@ if [ $# -gt 0 ]; then
             --device=/dev/ttyACM0 \
             --device=/dev/ttyDXL \
             -v /dev/bus/usb:/dev/bus/usb \
-            coolcat647/ros-tensorflow:${DOCKER_TAG}      
+            coolcat647/gym-gazebo-tensorflow:${DOCKER_TAG}      
     fi
 else
     echo "please provide docker tag name."

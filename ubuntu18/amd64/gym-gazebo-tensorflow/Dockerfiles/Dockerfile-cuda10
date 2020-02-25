@@ -1,0 +1,66 @@
+FROM coolcat647/ros-tensorflow:cuda10.0
+
+SHELL ["/bin/bash","-c"]
+
+# Add a user with the same user_id as the user outside the container
+# Requires a docker build argument `user_id`
+ARG user_id
+ENV USERNAME developer
+RUN useradd -U --uid ${user_id} -ms /bin/bash $USERNAME && \
+    echo "$USERNAME:$USERNAME" | chpasswd && \
+    adduser $USERNAME sudo && \
+    chown -R $USERNAME /home/$USERNAME /root/ && \
+    echo "$USERNAME ALL=NOPASSWD: ALL" >> /etc/sudoers.d/$USERNAME
+
+# Commands below run as the developer user
+USER $USERNAME
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    sudo apt-get update
+
+RUN apt-get install -y python-pip python3-vcstool python3-pyqt4 \
+    pyqt5-dev-tools \
+    libbluetooth-dev libspnav-dev \
+    pyqt4-dev-tools libcwiid-dev \
+    cmake gcc g++ qt4-qmake libqt4-dev \
+    libusb-dev libftdi-dev \
+    python3-defusedxml python3-vcstool \
+    ros-melodic-octomap-msgs        \
+    ros-melodic-joy                 \
+    ros-melodic-geodesy             \
+    ros-melodic-octomap-ros         \
+    ros-melodic-control-toolbox     \
+    ros-melodic-pluginlib          \
+    ros-melodic-trajectory-msgs     \
+    ros-melodic-control-msgs           \
+    ros-melodic-std-srvs           \
+    ros-melodic-nodelet        \
+    ros-melodic-urdf               \
+    ros-melodic-rviz               \
+    ros-melodic-kdl-conversions     \
+    ros-melodic-eigen-conversions   \
+    ros-melodic-tf2-sensor-msgs     \
+    ros-melodic-pcl-ros \
+    ros-melodic-navigation \
+    ros-melodic-sophus \
+    ros-melodic-rqt-robot-dashboard \
+    python3-matplotlib \
+    python3-opencv 
+
+RUN sudo pip netifaces
+
+RUN sudo pip3 install --upgrade scikit-image
+
+RUN sudo rm /etc/ros/rosdep/sources.list.d/20-default.list && \
+    sudo rosdep init && rosdep update && \
+    echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc && \
+    source /home/$USERNAME/.bashrc
+
+RUN cd /home/$USERNAME/ && git clone https://github.com/erlerobot/gym-gazebo && \
+    cd gym-gazebo && \
+    sudo pip3 install -e . && \
+    cd /home/$USERNAME/gym-gazebo/gym_gazebo/envs/installation && \
+    bash setup_melodic.bash && \
+    bash turtlebot_setup.bash
+
+CMD ["/bin/bash"]
