@@ -18,7 +18,8 @@ USER $USERNAME
 RUN export DEBIAN_FRONTEND=noninteractive && \
     sudo apt-get update
 
-RUN apt-get install -y python-pip python3-vcstool python3-pyqt4 \
+# Preparation for gym gazebo environment
+RUN sudo apt-get install -y python-pip python3-vcstool python3-pyqt4 \
     pyqt5-dev-tools \
     libbluetooth-dev libspnav-dev \
     pyqt4-dev-tools libcwiid-dev \
@@ -47,7 +48,7 @@ RUN apt-get install -y python-pip python3-vcstool python3-pyqt4 \
     python3-matplotlib \
     python3-opencv 
 
-RUN sudo pip netifaces
+RUN sudo pip install netifaces
 
 RUN sudo pip3 install --upgrade scikit-image
 
