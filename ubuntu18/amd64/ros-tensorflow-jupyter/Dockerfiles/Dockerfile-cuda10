@@ -56,6 +56,10 @@ RUN pip3 install --no-cache-dir tensorflow==1.15.0 tensorflow-gpu==1.15.0
 
 RUN pip3 install gym setuptools==41.0.0
 
+# Bash completion
+RUN rm /etc/apt/apt.conf.d/docker-clean && \
+    apt-get install -y bash-completion
+
 ENV QT_X11_NO_MITSHM=1
 
 CMD ["bash"]
