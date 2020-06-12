@@ -1,0 +1,84 @@
+FROM nvidia/cudagl:10.0-devel-ubuntu18.04
+
+SHELL ["/bin/bash","-c"]
+
+# Prerequisite linux tool for ROS
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -qq > /dev/null && apt-get install -y -qq sudo wget lsb-release iputils-ping > /dev/null && \
+    apt-get install -y -qq build-essential vim htop sshfs nfs-common git net-tools && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV CUDNN_VERSION 7.4.1.5
+LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
+
+# CUDA 10 : Pytorch 1.4.0 
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils \
+            libcudnn7=$CUDNN_VERSION-1+cuda10.0
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+# ROS installation: melodic
+ENV ROS_DISTRO melodic
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
+    apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
+    apt-get update && apt-get install -y --fix-missing\
+        apt-utils \
+        ros-${ROS_DISTRO}-desktop-full \
+        ros-${ROS_DISTRO}-serial \
+        python-rosdep python-rosinstall python-rosinstall-generator python-wstool && \
+    rosdep init && \
+    rosdep update && \
+    echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /root/.bashrc && \
+    source /root/.bashrc
+
+
+# ROS workspace in container
+ENV CATKIN_WS=/root/catkin_ws
+RUN mkdir -p $CATKIN_WS/src
+WORKDIR $CATKIN_WS/src
+
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash \
+    && apt-get update \
+    && cd $CATKIN_WS \
+    && catkin_make
+
+
+# Jupyter installation
+RUN apt-get update && apt-get install -y python-pip python3-pip
+RUN pip3 install pip==19.3.1
+RUN apt-get -y install curl
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash
+RUN apt-get -y install nodejs
+
+RUN pip3 install jupyter ipywidgets jupyterlab bqplot pyyaml jupyros numpy==1.18.0
+
+# Pytorch 1.4.0 + Torchvision 0.5.0 installation: cuda 10.0 + python 3.6 + pip3
+RUN pip3 install --no-cache-dir pip torch==1.4.0+cu100 torchvision==0.5.0+cu100 -f https://download.pytorch.org/whl/torch_stable.html
+
+RUN pip3 install scikit-learn \
+    scipy \
+    plyfile \
+    opencv-python \
+    tqdm 
+
+# Bash completion
+RUN rm /etc/apt/apt.conf.d/docker-clean && \
+    apt-get install -y bash-completion
+
+ENV QT_X11_NO_MITSHM=1
+
+
+# Add a user with the same user_id as the user outside the container
+# Requires a docker build argument `user_id`
+ARG user_id
+ENV USERNAME developer
+RUN useradd -U --uid ${user_id} -ms /bin/bash $USERNAME && \
+    echo "$USERNAME:$USERNAME" | chpasswd && \
+    adduser $USERNAME sudo && \
+    chown -R $USERNAME /home/$USERNAME /root/ && \
+    echo "$USERNAME ALL=NOPASSWD: ALL" >> /etc/sudoers.d/$USERNAME
+
+# Commands below run as the developer user
+USER $USERNAME
+
+CMD ["bash"]
