@@ -21,20 +21,17 @@ fi
 # Specify cuda version
 #
 if [ $# -gt 0 ]; then
-    if [[ "$1" == "cuda9" || "$1" == "cuda9.0" ]] ; then
-        echo -e "RUN: \"${DOCKER_CMD}\""
-        DOCKER_TAG="cuda9.0"
-    elif [[ "$1" == "cuda10" || "$1" == "cuda10.0" ]] ; then
+    if [[ "$1" == "cuda10" || "$1" == "cuda10.0" ]] ; then
         echo -e "RUN: \"${DOCKER_CMD}\""
         DOCKER_TAG="cuda10.0"
     elif [ "$1" == "same" ] ; then
         echo -e "RUN: \"docker exec\""
     else
         echo -e "Please specify which cuda version your GPU support."
-        echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda9 | cuda10 | same]${COLOR_NC}"
+        echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda10 | same]${COLOR_NC}"
     fi
 else
-    echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda9 | cuda10| same]${COLOR_NC}"
+    echo -e "${COLOR_RED}Usage: source docker_run.sh [cuda10| same]${COLOR_NC}"
 fi
 
 # Find current directory and transfer it to container directory for Docker
