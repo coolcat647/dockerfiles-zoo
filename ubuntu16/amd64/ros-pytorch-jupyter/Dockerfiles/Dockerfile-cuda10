@@ -35,15 +35,17 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
 
 
 # Jupyter installation
-RUN apt-get update && \
-    apt-get install -y \
-        python-pip \
-        python3-pip \
-        curl
+RUN apt-get update && apt-get install -y python-pip python3-pip
 RUN pip install pip==19.3.1
+RUN apt-get -y install curl
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash
 RUN apt-get -y install nodejs
-RUN pip install jupyter ipywidgets bqplot pyyaml numpy==1.12.0 future==0.18.2
+
+RUN pip install jupyter jupyterlab ipywidgets bqplot pyyaml jupyros numpy==1.12.0 future==0.18.2
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+RUN jupyter labextension install jupyter-ros
+RUN jupyter nbextension enable --py --sys-prefix jupyros
+RUN jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 
 # Pytorch installation: cuda 9.0 + python 2.7 + pip
