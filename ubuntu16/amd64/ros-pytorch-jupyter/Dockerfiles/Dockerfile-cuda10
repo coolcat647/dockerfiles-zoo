@@ -46,15 +46,14 @@ RUN jupyter nbextension install --py widgetsnbextension --user && \
     jupyter nbextension enable widgetsnbextension --user --py && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
-RUN pip install gdown h5py opencv-python==4.2.0.32 && \
-    pip install --upgrade cryptography matplotlib
-
-
 # Pytorch installation: cuda 9.0 + python 2.7 + pip
 # RUN pip install --no-cache-dir torch==1.0.1 -f https://download.pytorch.org/whl/cu90/stable torchvision typing
 # Pytorch installation: cuda 10.0 + python 2.7 + pip
 RUN pip install --no-cache-dir torch==1.4.0 torchvision==0.5.0 -f https://download.pytorch.org/whl/cu100/torch_stable.html
 
+
+RUN pip install gdown h5py opencv-python==4.2.0.32 && \
+    pip install --upgrade cryptography matplotlib
 
 # Bash completion
 RUN rm /etc/apt/apt.conf.d/docker-clean && \
