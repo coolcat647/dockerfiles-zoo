@@ -38,8 +38,6 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
 RUN apt-get update && \
     apt-get install -y  curl python-pip python3-pip 
 RUN pip install pip==19.3.1 && \
-    pip install --upgrade cryptography matplotlib && \
-    pip install gdown h5py opencv-python==4.2.0.32 && \
     python -m easy_install --upgrade pyOpenSSL 
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash
 RUN apt-get -y install nodejs
@@ -48,6 +46,9 @@ RUN pip install jupyterlab-widgets>=1.0.0 jupyter jupyterlab ipywidgets bqplot p
 RUN jupyter nbextension install --py widgetsnbextension --user && \
     jupyter nbextension enable widgetsnbextension --user --py && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension
+
+RUN pip install gdown h5py opencv-python==4.2.0.32 && \
+    pip install --upgrade cryptography matplotlib
 
 
 # Pytorch installation: cuda 9.0 + python 2.7 + pip
