@@ -36,9 +36,10 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
 
 # Jupyter and Other python package installation
 RUN apt-get update && \
-    apt-get install -y  curl python-pip python3-pip gdown h5py opencv-python==4.2.0.32
+    apt-get install -y  curl python-pip python3-pip 
 RUN pip install pip==19.3.1 && \
     pip install --upgrade cryptography matplotlib && \
+    pip install gdown h5py opencv-python==4.2.0.32 && \
     python -m easy_install --upgrade pyOpenSSL 
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash
 RUN apt-get -y install nodejs
